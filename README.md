@@ -24,13 +24,20 @@ npm run dev
 - API: http://localhost:4000 (Asaas at `http://localhost:4000/asaas/v3`)
 - UI: http://localhost:5173
 
-With Docker:
+With Docker, one image runs both:
 
 ```bash
-ASAAS_WEBHOOK_URL=http://host.docker.internal:3000/webhooks/asaas docker compose up --build
+docker run -p 15080:15080 -p 15088:15088 \
+  -e ASAAS_WEBHOOK_URL=http://host.docker.internal:3000/webhooks/asaas \
+  ghcr.io/tcds-io/sandbox:latest
 ```
 
-- API: http://localhost:4000, UI: http://localhost:8080
+or `docker compose up --build` from this repo.
+
+- API: http://localhost:15080 (Asaas at `http://localhost:15080/asaas/v3`)
+- UI: http://localhost:15088
+
+In Docker, `PORT` defaults to `15080`, `APP_PORT` (UI) to `15088` and `PUBLIC_URL` to `http://localhost:15080`.
 
 ## Point your app at it
 
@@ -38,7 +45,7 @@ Change only the base URL (and key) your adapter uses:
 
 | Provider | Real base URL | Sandbox base URL |
 | --- | --- | --- |
-| Asaas | `https://api-sandbox.asaas.com/v3` | `http://localhost:4000/asaas/v3` |
+| Asaas | `https://api-sandbox.asaas.com/v3` | `http://localhost:4000/asaas/v3` (Docker: `:15080`) |
 
 Then set the sandbox's webhook URL to your app's webhook endpoint (`ASAAS_WEBHOOK_URL`) and the token your app checks (`ASAAS_WEBHOOK_TOKEN`).
 
@@ -151,6 +158,13 @@ To add a control action (fail, refund…), add its name to `PAYMENT_ACTIONS` in 
 npm test          # contract + e2e tests
 npm run typecheck
 npm run build
+```
+
+CI (`.github/workflows/ci.yml`) runs typecheck, tests and a Docker build + smoke test on every pull request.
+Pushing a `v*` tag publishes the image to `ghcr.io/tcds-io/sandbox` (`1.2.3`, `1.2`, `latest`):
+
+```bash
+git tag v0.1.0 && git push origin v0.1.0
 ```
 
 ## License
