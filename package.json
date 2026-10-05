@@ -1,0 +1,23 @@
+{
+  "name": "sandbox",
+  "private": true,
+  "description": "A self-hostable local stand-in for payment providers.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/sandbox-api",
+    "packages/sandbox-app"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,app -c blue,magenta \"npm run dev -w sandbox-api\" \"npm run dev -w sandbox-app\"",
+    "build": "npm run build -w sandbox-api && npm run build -w sandbox-app",
+    "typecheck": "npm run typecheck -w sandbox-api && npm run typecheck -w sandbox-app",
+    "test": "npm test -w sandbox-api"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "typescript": "^7.0.2"
+  }
+}
