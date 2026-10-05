@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Typecheck and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          tags: sandbox:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke test
+        run: |
+          docker run -d --name sandbox -p 15080:15080 -p 15088:15088 sandbox:ci
+          for i in $(seq 1 30); do curl -fs http://localhost:15080/health && break; sleep 1; done
+          curl -fs http://localhost:15080/health
+          curl -fs http://localhost:15088/ | grep -q '<div id="root">'
+          curl -fs http://localhost:15088/_sandbox/providers | grep -q '"asaas"'
+          curl -fs -H 'access_token: $aact_hmlg_ci' -o /dev/null -w '%{http_code}' http://localhost:15080/asaas/v3/customers | grep -q 200
+      - name: Logs
+        if: failure()
+        run: docker logs sandbox
