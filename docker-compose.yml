@@ -1,0 +1,21 @@
+services:
+  api:
+    build: { context: ., target: api }
+    ports: ["4000:4000"]
+    environment:
+      PORT: 4000
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:4000}
+      ASAAS_API_KEY: ${ASAAS_API_KEY:-}
+      # Your app's webhook endpoint. host.docker.internal reaches an app running on the host.
+      ASAAS_WEBHOOK_URL: ${ASAAS_WEBHOOK_URL:-http://host.docker.internal:3000/webhooks/asaas}
+      ASAAS_WEBHOOK_TOKEN: ${ASAAS_WEBHOOK_TOKEN:-}
+      WEBHOOK_MAX_ATTEMPTS: ${WEBHOOK_MAX_ATTEMPTS:-4}
+      WEBHOOK_RETRY_BASE_MS: ${WEBHOOK_RETRY_BASE_MS:-1000}
+    extra_hosts: ["host.docker.internal:host-gateway"]
+
+  app:
+    build: { context: ., target: app }
+    ports: ["8080:8080"]
+    environment:
+      SANDBOX_API_URL: http://api:4000
+    depends_on: [api]

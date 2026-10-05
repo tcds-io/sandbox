@@ -1,0 +1,10 @@
+server {
+  listen 8080;
+  root /usr/share/nginx/html;
+
+  # The app calls the control API on its own origin.
+  location /_sandbox/ { proxy_pass ${SANDBOX_API_URL}; }
+  location = /health { proxy_pass ${SANDBOX_API_URL}; }
+
+  location / { try_files $uri /index.html; }
+}

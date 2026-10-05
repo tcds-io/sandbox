@@ -1,0 +1,34 @@
+{
+  "id": "evt_05b708f961d739ea7eba7e4db318f621&368604920",
+  "event": "PAYMENT_RECEIVED",
+  "dateCreated": "2024-06-12 16:45:03",
+  "account": {
+    "id": "47ed0d25-f9fb-4b35-b23a-d8895caf92b7",
+    "ownerId": null
+  },
+  "payment": {
+    "object": "payment",
+    "id": "pay_080225913252",
+    "dateCreated": "2021-01-01",
+    "customer": "cus_G7Dvo4iphUNk",
+    "subscription": "sub_VXJBYgP2u0eO",
+    "installment": "2765d086-c7c5-5cca-898a-4262d212587c",
+    "paymentLink": "123517639363",
+    "dueDate": "2021-01-01",
+    "value": 100,
+    "netValue": 94.51,
+    "billingType": "CREDIT_CARD",
+    "status": "RECEIVED",
+    "confirmedDate": "2021-01-01",
+    "paymentDate": "2021-01-01",
+    "creditDate": "2021-02-01",
+    "split": [
+      {
+        "id": "c788f2e1-0a5b-41b9-b0be-ff3641fb0cbe",
+        "walletId": "48548710-9baa-4ec1-a11f-9010193527c6",
+        "fixedValue": 20,
+        "status": "PENDING"
+      }
+    ]
+  }
+}
