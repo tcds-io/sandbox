@@ -161,10 +161,10 @@ npm run build
 ```
 
 CI (`.github/workflows/ci.yml`) runs typecheck, tests and a Docker build + smoke test on every pull request.
-Pushing a `v*` tag publishes the image to `ghcr.io/tcds-io/sandbox` (`1.2.3`, `1.2`, `latest`):
+Publishing a GitHub release tagged `vX.Y.Z` publishes the image to `ghcr.io/tcds-io/sandbox` (`X.Y.Z`, `X.Y`, and `latest` unless it is a pre-release):
 
 ```bash
-git tag v0.1.0 && git push origin v0.1.0
+gh release create v0.1.0 --generate-notes
 ```
 
 ## License
